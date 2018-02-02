@@ -7,52 +7,27 @@
  */
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
-use GraphQL\Type\Schema;
+use GraphQL\Utils\BuildSchema;
 use GraphQL\GraphQL;
+
+$superResolver = function($rootValue, $args, $context, $resolveInfo) {
+    return json_encode($args['input']['firstName']);
+};
+
 try {
-    $queryType = new ObjectType([
-        'name' => 'Query',
-        'fields' => [
-            'echo' => [
-                'type' => Type::string(),
-                'args' => [
-                    'message' => ['type' => Type::string()],
-                ],
-                'resolve' => function ($root, $args) {
-                    return $root['prefix'] . $args['message'];
-                }
-            ],
-        ],
-    ]);
-    $mutationType = new ObjectType([
-        'name' => 'Calc',
-        'fields' => [
-            'sum' => [
-                'type' => Type::int(),
-                'args' => [
-                    'x' => ['type' => Type::int()],
-                    'y' => ['type' => Type::int()],
-                ],
-                'resolve' => function ($root, $args) {
-                    return $args['x'] + $args['y'];
-                },
-            ],
-        ],
-    ]);
-    // See docs on schema options:
-    // http://webonyx.github.io/graphql-php/type-system/schema/#configuration-options
-    $schema = new Schema([
-        'query' => $queryType,
-        'mutation' => $mutationType,
-    ]);
+    $contents = file_get_contents('../schema/schema.graphql');
+    $schema = BuildSchema::build($contents);
+
     $rawInput = file_get_contents('php://input');
     $input = json_decode($rawInput, true);
     $query = $input['query'];
     $variableValues = isset($input['variables']) ? $input['variables'] : null;
     $rootValue = ['prefix' => 'You said: '];
-    $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues);
+    if (strpos($query, 'query IntrospectionQuery {') !== false) { // black magic
+        $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues, null, null);
+    } else {
+        $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues, null, $superResolver);
+    }
     $output = $result->toArray();
 } catch (\Exception $e) {
     $output = [
@@ -62,4 +37,5 @@ try {
     ];
 }
 header('Content-Type: application/json; charset=UTF-8');
+//echo json_encode($result); die;
 echo json_encode($output);
