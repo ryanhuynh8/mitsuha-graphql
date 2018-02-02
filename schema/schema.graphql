@@ -4,11 +4,22 @@ schema {
 }
 
 type Query {
-    greetings(input: HelloInput!): String!
+    issues: [Issue]
 }
 
 type Mutation {
     getCurrentIssue(id: Int): String!
+}
+
+scalar Date
+
+type Issue {
+    id: ID
+    title: String
+    description: String
+    status: Int
+    createdAt: Date
+    updatedAt: Date
 }
 
 input HelloInput {

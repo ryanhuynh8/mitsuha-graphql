@@ -14,3 +14,7 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+/**
+ * Routes for resource graph-q-l
+ */
+$router->post('graphql', 'GraphQLController@index');
