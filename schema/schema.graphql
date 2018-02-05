@@ -18,8 +18,8 @@ type Issue {
     title: String
     description: String
     status: Int
-    createdAt: Date
-    updatedAt: Date
+    updated: String
+    created: String
 }
 
 input HelloInput {

@@ -32,7 +32,7 @@ class GraphQLController extends Controller {
                 'issues' => function($root, $args, $context) {
                     $sum = new Addition();
                     return $sum->resolve($root, $args, $context);
-                },
+                }
             ];
 
             if (strpos($query, 'query IntrospectionQuery {') !== false) { // black magic
