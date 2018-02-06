@@ -27,6 +27,7 @@
     "promise": "7.1.1",
     "query-string": "^5.0.1",
     "react": "^16.2.0",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-bootstrap": "^0.31.5",
     "react-dev-utils": "^3.0.2",
     "react-dom": "^16.2.0",
