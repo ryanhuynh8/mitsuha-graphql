@@ -19,6 +19,17 @@ class Addition implements Resolver
 }
 
 class GraphQLController extends Controller {
+    public function generate() {
+//        for ($i = 1; $i <= 100; $i++) {
+//            $json = json_decode(file_get_contents('http://www.randomtext.me/api/gibberish/p-6/20-35'), true);
+//            $issue = new Issue();
+//            $issue->description = $json['text_out'];
+//            $issue->title = 'Foobar '.$i;
+//            $issue->save();
+//        }
+        echo 'Success';
+    }
+
     public function index() {
         try {
             $contents = file_get_contents(__DIR__.'\..\..\..\schema\schema.graphql');
@@ -30,7 +41,7 @@ class GraphQLController extends Controller {
 
             $rootValue = [
                 'issues' => function($root, $args, $context) {
-                    $sum = new Addition();
+                    $sum = new getAllIssue();
                     return $sum->resolve($root, $args, $context);
                 }
             ];

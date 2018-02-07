@@ -6,7 +6,6 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router';
 import './index.css';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 
 const browserHistory = createBrowserHistory();
 const routingStore = new RouterStore();
@@ -20,10 +19,9 @@ const history = syncHistoryWithStore(browserHistory, routingStore);
 ReactDOM.render(
     <Provider>
         <Router history={history}>
-        <div>
-            <App />
-        </div>
+            <div>
+                <App />
+            </div>
         </Router>
 </Provider>, document.getElementById('root'));
-registerServiceWorker();
 

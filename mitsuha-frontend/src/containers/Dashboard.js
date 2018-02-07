@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import { Icon, Card, Button, ButtonGroup, AnchorButton } from '@blueprintjs/core';
+import { getIssuesQuery } from "../graphql/queries";
 
 class Dashboard extends Component {
+    async componentWillMount() {
+        this.props.store.issueStore.fetchMyIssues();
+    }
+
     render() {
+        const { issues } = this.props.store.issueStore;
+        console.log(issues);
         return (
             <div className="wrapper">
                 <nav id="sidebar">
@@ -56,7 +63,7 @@ class Dashboard extends Component {
                             <table className="pt-table pt-striped pt-interactive kaizen-issues-table">
                                 <thead>
                                 <tr>
-                                    <th></th>
+                                    <th />
                                     <th>Issue type</th>
                                     <th>#</th>
                                     <th>Title</th>
@@ -83,8 +90,8 @@ class Dashboard extends Component {
                             </table>
                         </div>
 
-                        <div className="col-md-2 py-4 kaizen-buttons-group">
-                            <ButtonGroup large={true}>
+                        <div className="col-md-12 py-4 kaizen-buttons-group">
+                            <ButtonGroup large={false}>
                                 <button type="button" className="pt-button pt-large">
                                     <span className="kaizen-icon fas fa-reply" />
                                     Reply
@@ -105,6 +112,35 @@ class Dashboard extends Component {
                                     Resolve
                                 </button>
                             </ButtonGroup>
+                        </div>
+
+                        <div className="col-md-6 py-2">
+                            <table className="pt-table pt-bordered kaizen-bordered-table">
+                                <thead>
+                                <tr>
+                                    <th><h6>Cases matching this filter</h6></th>
+                                    <th />
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>6</td>
+                                </tr>
+                                <tr>
+                                    <td>Cases without estimate</td>
+                                    <td>6</td>
+                                </tr>
+                                <tr>
+                                    <td>Total estimated time remaining</td>
+                                    <td>0 hour(s)</td>
+                                </tr>
+                                <tr>
+                                    <td>Total elapsed time</td>
+                                    <td>0 hour(s)</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

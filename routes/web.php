@@ -18,3 +18,4 @@ $router->get('/', function () use ($router) {
  * Routes for resource graph-q-l
  */
 $router->post('graphql', 'GraphQLController@index');
+$router->get('generate', 'GraphQLController@generate');

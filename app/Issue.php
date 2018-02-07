@@ -15,11 +15,11 @@ class Issue extends Model {
     ];
 
     public function getCreatedAttribute() {
-        return $this->created_at->toDateTimeString();
+        return $this->created_at->timestamp;
     }
 
     public function getUpdatedAttribute() {
-        return $this->updated_at->toDateTimeString();
+        return $this->updated_at->timestamp;
     }
 
     public function getFooAttribute() {

@@ -123,6 +123,10 @@ ul ul a {
     width: 100%;
 }
 
+.kaizen-bordered-table {
+    border: 1px solid black;
+}
+
 .kaizen-bug {
     color: red;
 }
