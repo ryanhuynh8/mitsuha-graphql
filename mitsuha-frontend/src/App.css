@@ -127,6 +127,10 @@ ul ul a {
     border: 1px solid black;
 }
 
+.kaizen-full-width {
+    width: 100%;
+}
+
 .kaizen-bug {
     color: red;
 }

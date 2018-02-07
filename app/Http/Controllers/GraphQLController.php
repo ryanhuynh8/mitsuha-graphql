@@ -9,11 +9,13 @@ interface Resolver {
     public function resolve($root, $args, $context);
 }
 
-class Addition implements Resolver
+class IssueResolver implements Resolver
 {
     public function resolve($root, $args, $context)
     {
-        $issues = Issue::all();
+        $offset = $args['offset'];
+        $limit = $args['limit'];
+        $issues = Issue::where('status', 0)->limit($limit)->skip($offset)->get();
         return $issues;
     }
 }
@@ -41,7 +43,7 @@ class GraphQLController extends Controller {
 
             $rootValue = [
                 'issues' => function($root, $args, $context) {
-                    $sum = new getAllIssue();
+                    $sum = new IssueResolver();
                     return $sum->resolve($root, $args, $context);
                 }
             ];

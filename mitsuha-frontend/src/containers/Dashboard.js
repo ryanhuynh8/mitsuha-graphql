@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
 import { Icon, Card, Button, ButtonGroup, AnchorButton } from '@blueprintjs/core';
-import { getIssuesQuery } from "../graphql/queries";
+import {observer} from "mobx-react";
+import Slider from 'react-slide-out';
+import 'react-slide-out/lib/index.css';
 
+@observer
 class Dashboard extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { isOpen: false };
+    }
     async componentWillMount() {
         this.props.store.issueStore.fetchMyIssues();
     }
 
+    loadMoreIssue = async () => {
+        return this.props.store.issueStore.fetchMyIssues();
+    };
+
     render() {
-        const { issues } = this.props.store.issueStore;
-        console.log(issues);
+        const { currentIssues } = this.props.store.issueStore;
         return (
             <div className="wrapper">
                 <nav id="sidebar">
@@ -75,19 +85,37 @@ class Dashboard extends Component {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td width="5%"><input type="checkbox" /></td>
-                                    <td width="8%"><i className="fas fa-bug kaizen-bug" /></td>
-                                    <td width="5%">32132</td>
-                                    <td width="40%">This is a bug</td>
-                                    <td width="5%">Done</td>
-                                    <td width="10%">Ryan Huynh</td>
-                                    <td width="10%">Ryan Huynh</td>
-                                    <td width="5%">10/05/1990</td>
-                                    <td width="10%">1 - High</td>
-                                </tr>
+
+                                    {currentIssues.map(issue => (
+                                        <tr key={issue.id}>
+                                            <td width="5%"><label className="pt-control pt-checkbox">
+                                                <input type="checkbox pt-large" />
+                                                <span className="pt-control-indicator" />
+                                            </label></td>
+                                            <td width="8%"><i className="fas fa-bug kaizen-bug" /></td>
+                                            <td width="5%">32132</td>
+                                            <td width="40%">{issue.title}</td>
+                                            <td width="5%">Done</td>
+                                            <td width="10%">Ryan Huynh</td>
+                                            <td width="10%">Ryan Huynh</td>
+                                            <td width="5%">10/05/1990</td>
+                                            <td width="10%">1 - High</td>
+                                        </tr>
+                                        )
+                                    )}
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div className="col-md-12 py-2">
+                            <button type="button" className="pt-button pt-large kaizen-full-width" onClick={this.loadMoreIssue}>
+                                <span className="kaizen-icon fas fa-sync" />
+                                Load more
+                            </button>
+                            <button type="button" className="pt-button pt-large kaizen-full-width" onClick={() => this.setState({isOpen:true})}>
+                                <span className="kaizen-icon fas fa-sync" />
+                                Show/Hide
+                            </button>
                         </div>
 
                         <div className="col-md-12 py-4 kaizen-buttons-group">
@@ -143,6 +171,17 @@ class Dashboard extends Component {
                             </table>
                         </div>
                     </div>
+                    <Slider
+                        title='test title'
+                        footer={
+                            <div style={{padding: '15px'}}>
+                                <a href='#' onClick={() => this.setState({isOpen: false}) }>Close Slider</a>
+                            </div>
+                        }
+                        isOpen={this.state.isOpen}
+                        onOutsideClick={() => this.setState({isOpen: false})}>
+                        <div>...Some heavy scrollable content...</div>
+                    </Slider>
                 </div>
             </div>);
     }

@@ -43,6 +43,7 @@
     "react-router-redux": "^5.0.0-alpha.6",
     "react-router-transition": "^0.1.1",
     "react-scripts": "1.1.0",
+    "react-slide-out": "0.0.8",
     "redux": "^3.7.2",
     "style-loader": "0.18.2",
     "universal-cookie": "^2.1.2",
