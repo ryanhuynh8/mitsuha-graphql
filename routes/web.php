@@ -19,3 +19,5 @@ $router->get('/', function () use ($router) {
  */
 $router->post('graphql', 'GraphQLController@index');
 $router->get('generate', 'GraphQLController@generate');
+$router->post('login', 'AuthController@postLogin');
+$router->post('register', 'AuthController@register');

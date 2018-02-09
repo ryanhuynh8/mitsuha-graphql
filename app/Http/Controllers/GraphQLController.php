@@ -13,10 +13,27 @@ class IssueResolver implements Resolver
 {
     public function resolve($root, $args, $context)
     {
+//$time_start = microtime(true);
+
         $offset = $args['offset'];
         $limit = $args['limit'];
         $issues = Issue::where('status', 0)->limit($limit)->skip($offset)->get();
+$time_end = microtime(true);
+//$time = $time_end - $time_start;
         return $issues;
+    }
+}
+
+class SingleIssueResolver implements Resolver
+{
+    public function resolve($root, $args, $context)
+    {
+        $id = $args['id'];
+$time_start = microtime(true);
+        $issue = Issue::where('id', $id)->get()->first();
+        $time_end = microtime(true);
+        $time = $time_end - $time_start;
+        return $issue;
     }
 }
 
@@ -34,6 +51,8 @@ class GraphQLController extends Controller {
 
     public function index() {
         try {
+            $time_start = microtime(true);
+
             $contents = file_get_contents(__DIR__.'\..\..\..\schema\schema.graphql');
             $schema = BuildSchema::build($contents);
             $rawInput = file_get_contents('php://input');
@@ -41,12 +60,20 @@ class GraphQLController extends Controller {
             $query = $input['query'];
             $variableValues = isset($input['variables']) ? $input['variables'] : null;
 
+            $time_end = microtime(true);
+            $time = $time_end - $time_start;
+
             $rootValue = [
                 'issues' => function($root, $args, $context) {
-                    $sum = new IssueResolver();
-                    return $sum->resolve($root, $args, $context);
+                    $resolver = new IssueResolver();
+                    return $resolver->resolve($root, $args, $context);
+                },
+                'issue' => function($root, $args, $context) {
+                    $resolver = new SingleIssueResolver();
+                    return $resolver->resolve($root, $args, $context);
                 }
             ];
+
 
             if (strpos($query, 'query IntrospectionQuery {') !== false) { // black magic
                 $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues, null, null);
@@ -61,6 +88,7 @@ class GraphQLController extends Controller {
                 ]
             ];
         }
+
         return $output;
     }
 }

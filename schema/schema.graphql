@@ -5,6 +5,7 @@ schema {
 
 type Query {
     issues(offset: Int, limit: Int): [Issue]
+    issue(id: Int): Issue
 }
 
 type Mutation {
