@@ -1,11 +1,12 @@
 import {observable, autorun, action} from 'mobx';
-import {getIssuesQuery} from "../graphql/queries";
+import {getIssuesQuery, getSingleIssue} from "../graphql/queries";
 import client from '../graphql';
 
 export default class IssueStore {
     @observable currentIssues = [];
     @observable currentOffset = 0;
     @observable limit = 6;
+    @observable activeIssue = {};
 
     @action
     fetchMyIssues = async () => {
@@ -15,6 +16,12 @@ export default class IssueStore {
             this.currentIssues.push(item);
         });
         this.currentOffset += this.limit;
-        console.log('');
+    };
+
+    @action
+    fetchSingleIssue = async (id) => {
+        const response = await client.query({ query: getSingleIssue, variables: { id: id }});
+        const data = response.data;
+        this.activeIssue = data.issue;
     }
 }

@@ -3,12 +3,13 @@ import { Icon, Card, Button, ButtonGroup, AnchorButton } from '@blueprintjs/core
 import {observer} from "mobx-react";
 import Slider from 'react-slide-out';
 import 'react-slide-out/lib/index.css';
+import MyIssue from '../components/MyIssue';
 
 @observer
 class Dashboard extends Component {
     constructor(props) {
         super(props);
-        this.state = { isOpen: false };
+        this.state = { isOpen: true };
     }
     async componentWillMount() {
         this.props.store.issueStore.fetchMyIssues();
@@ -18,8 +19,25 @@ class Dashboard extends Component {
         return this.props.store.issueStore.fetchMyIssues();
     };
 
+    selectIssue = (id) => {
+        this.setState({ isOpen: true });
+        return this.props.store.issueStore.fetchSingleIssue(Number(id));
+    };
+
+    renderSlideTitle = (activeIssue) => {
+        return (<div className="row">
+            <div className="col-md-4"><h3>{activeIssue.title}</h3></div>
+            <div className="col-md-5 offset-md-3">
+                <button className="pt-button pt-minimal"><i className="fas fa-pencil-alt" />Edit</button>
+                <button className="pt-button pt-minimal"><i className="fas fa-email" />Email</button>
+                <button className="pt-button pt-minimal"><i className="fas fa-users" />Assign</button>
+                <button className="pt-button pt-minimal"><i className="fas fa-check" />Resolve</button>
+            </div>
+        </div>)
+    };
+
     render() {
-        const { currentIssues } = this.props.store.issueStore;
+        const { currentIssues, activeIssue } = this.props.store.issueStore;
         return (
             <div className="wrapper">
                 <nav id="sidebar">
@@ -87,7 +105,7 @@ class Dashboard extends Component {
                                 <tbody>
 
                                     {currentIssues.map(issue => (
-                                        <tr key={issue.id}>
+                                        <tr key={issue.id} onClick={() => this.selectIssue(issue.id)}>
                                             <td width="5%"><label className="pt-control pt-checkbox">
                                                 <input type="checkbox pt-large" />
                                                 <span className="pt-control-indicator" />
@@ -172,7 +190,7 @@ class Dashboard extends Component {
                         </div>
                     </div>
                     <Slider
-                        title='test title'
+                        title={this.renderSlideTitle(activeIssue)}
                         footer={
                             <div style={{padding: '15px'}}>
                                 <a href='#' onClick={() => this.setState({isOpen: false}) }>Close Slider</a>
@@ -180,7 +198,7 @@ class Dashboard extends Component {
                         }
                         isOpen={this.state.isOpen}
                         onOutsideClick={() => this.setState({isOpen: false})}>
-                        <div>...Some heavy scrollable content...</div>
+                        <MyIssue data={activeIssue} />
                     </Slider>
                 </div>
             </div>);

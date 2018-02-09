@@ -1,3 +1,7 @@
+body {
+    font-size: 12px;
+}
+
 .wrapper {
     display: flex;
 }
@@ -5,7 +9,6 @@
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    height: 100vh;
 }
 
 #sidebar.active {
@@ -135,6 +138,68 @@ ul ul a {
     color: red;
 }
 
+.kaizen-status-immediate {
+    color: orange;
+}
+
 .kaizen-icon {
     margin-right: 10px;
+}
+
+button .fas {
+    margin-right: 8px;
+}
+
+.SlideModal__title {
+    width: 100%;
+}
+
+.SlideWrapper {
+    height: 100vmax;
+}
+
+.kaizen-issue a {
+    color: #007bff;
+}
+
+.kaizen-status {
+    border-radius: 4px;
+    display: block;
+    background-color: #66cc8b;
+    margin: 0 1em 0 0;
+    padding: 0.25em 0.8em;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.kaizen-flex {
+    display: flex;
+}
+
+.kaizen-flex-v-centered {
+    align-items: center;
+}
+
+.overview-text {
+    font-size: 0.8rem;
+}
+
+.overview-text span {
+    margin-right: 35px;
+}
+
+.kaizen-status-text i {
+    margin-right: 10px;
+}
+
+.kaizen-issue-label {
+    color: gray;
+}
+
+.kaizen-issue-bold-label {
+    font-weight: bold;
+}
+
+a.dotted {
+    border-bottom: 1px dotted #0b45d9;
 }

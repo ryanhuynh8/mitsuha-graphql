@@ -12,3 +12,16 @@ export const getIssuesQuery = gql`
         }
     }
 `;
+
+export const getSingleIssue = gql`
+    query getIssue($id: Int) {
+        issue(id: $id) {
+            id
+            title
+            status
+            description
+            updated
+            created
+        }
+    }  
+`;
