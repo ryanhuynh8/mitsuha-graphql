@@ -13,13 +13,9 @@ class IssueResolver implements Resolver
 {
     public function resolve($root, $args, $context)
     {
-//$time_start = microtime(true);
-
         $offset = $args['offset'];
         $limit = $args['limit'];
         $issues = Issue::where('status', 0)->limit($limit)->skip($offset)->get();
-$time_end = microtime(true);
-//$time = $time_end - $time_start;
         return $issues;
     }
 }
@@ -29,15 +25,17 @@ class SingleIssueResolver implements Resolver
     public function resolve($root, $args, $context)
     {
         $id = $args['id'];
-$time_start = microtime(true);
         $issue = Issue::where('id', $id)->get()->first();
-        $time_end = microtime(true);
-        $time = $time_end - $time_start;
         return $issue;
     }
 }
 
 class GraphQLController extends Controller {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function generate() {
 //        for ($i = 1; $i <= 100; $i++) {
 //            $json = json_decode(file_get_contents('http://www.randomtext.me/api/gibberish/p-6/20-35'), true);
@@ -52,7 +50,6 @@ class GraphQLController extends Controller {
     public function index() {
         try {
             $time_start = microtime(true);
-
             $contents = file_get_contents(__DIR__.'\..\..\..\schema\schema.graphql');
             $schema = BuildSchema::build($contents);
             $rawInput = file_get_contents('php://input');
