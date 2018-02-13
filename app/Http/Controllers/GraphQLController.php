@@ -1,13 +1,17 @@
-<?php namespace App\Http\Controllers;
+<?php
+namespace App\Http\Controllers;
 
 use GraphQL\Utils\BuildSchema;
 use GraphQL\Utils\AST;
 use GraphQL\GraphQL;
 use App\Issue;
-
-interface Resolver {
-    public function resolve($root, $args, $context);
-}
+use App\Permission;
+use App;
+use App\GraphQL\Resolver;
+use App\GraphQL\Mutator;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use GraphQL\Error\Debug;
 
 class IssueResolver implements Resolver
 {
@@ -15,7 +19,8 @@ class IssueResolver implements Resolver
     {
         $offset = $args['offset'];
         $limit = $args['limit'];
-        $issues = Issue::where('status', 0)->limit($limit)->skip($offset)->get();
+        $projectId = $args['projectId'];
+        $issues = Issue::where('project_id', $projectId)->limit($limit)->skip($offset)->get();
         return $issues;
     }
 }
@@ -27,6 +32,32 @@ class SingleIssueResolver implements Resolver
         $id = $args['id'];
         $issue = Issue::where('id', $id)->get()->first();
         return $issue;
+    }
+}
+
+class CommentsMutator implements Mutator
+{
+    public function mutate($root, $args, $context)
+    {
+        $time_start = microtime(true);
+        $userId = JWTAuth::getPayload(JWTAuth::getToken())->get('sub')['id'];
+        $id = $args['issueId'];
+        $commentText = $args['commentText'];
+        $issue = Issue::findOrFail($id);
+        $permission = Permission::where('project_id', $issue->project_id)->get()->first();
+
+        if (!$permission) {
+            return 'PERMISSION_DENIED';
+        }
+
+        $comment = new App\Comment();
+        $comment->issue_id = $id;
+        $comment->user_id = $userId;
+        $comment->comment = $commentText;
+        $comment->save();
+        $time_end = microtime(true);
+        $time = $time_end - $time_start;
+        return 'SUCCESS';
     }
 }
 
@@ -47,7 +78,7 @@ class GraphQLController extends Controller {
         echo 'Success';
     }
 
-    public function index() {
+    public function index(Request $request) {
         try {
             $time_start = microtime(true);
             $contents = file_get_contents(__DIR__.'\..\..\..\schema\schema.graphql');
@@ -57,8 +88,6 @@ class GraphQLController extends Controller {
             $query = $input['query'];
             $variableValues = isset($input['variables']) ? $input['variables'] : null;
 
-            $time_end = microtime(true);
-            $time = $time_end - $time_start;
 
             $rootValue = [
                 'issues' => function($root, $args, $context) {
@@ -68,16 +97,26 @@ class GraphQLController extends Controller {
                 'issue' => function($root, $args, $context) {
                     $resolver = new SingleIssueResolver();
                     return $resolver->resolve($root, $args, $context);
+                },
+                'comments' => function($root, $args, $context) {
+                    $resolver = new App\GraphQL\CommentsResolver();
+                    return $resolver->resolve($root, $args, $context);
+                },
+                'addComment' => function($root, $args, $context) {
+                    $mutator = new CommentsMutator();
+                    return $mutator->mutate($root, $args, $context);
                 }
             ];
 
+            $debug = Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE;
 
             if (strpos($query, 'query IntrospectionQuery {') !== false) { // black magic
                 $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues, null, null);
             } else {
                 $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues);
             }
-            $output = $result->toArray();
+
+            $output = $result->toArray($debug);
         } catch (\Exception $e) {
             $output = [
                 'error' => [
@@ -85,7 +124,8 @@ class GraphQLController extends Controller {
                 ]
             ];
         }
-
+        $time_end = microtime(true);
+        $time = $time_end - $time_start;
         return $output;
     }
 }

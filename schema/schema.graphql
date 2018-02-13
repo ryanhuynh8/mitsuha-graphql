@@ -4,15 +4,27 @@ schema {
 }
 
 type Query {
-    issues(offset: Int, limit: Int): [Issue]
+    issues(projectId: Int, offset: Int, limit: Int): [Issue]
     issue(id: Int): Issue
+    comments(id: Int): [Comment]
 }
 
 type Mutation {
-    getCurrentIssue(id: Int): String!
+    addComment(issueId: Int, commentText: String): MutationResult
+}
+
+enum MutationResult {
+    SUCCESS,
+    FAILURE,
+    PERMISSION_DENIED
 }
 
 scalar Date
+
+type Comment {
+    comment: String,
+    createdBy: String,
+}
 
 type Issue {
     id: ID

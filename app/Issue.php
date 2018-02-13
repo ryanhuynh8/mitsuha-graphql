@@ -26,16 +26,6 @@ class Issue extends Model {
         return "haha";
     }
 
-//    public function getFooAttribute() {
-//        return 'bar';
-//    }
-//
-//    public function getUpdatedAtAttribute($value)
-//    {
-//        return $this->status;
-//    }
-
-
     // Relationships
 
 }

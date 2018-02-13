@@ -37,7 +37,7 @@ return [
 
     'guards' => [
         'api' => [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'jwt',
         ],
     ],
@@ -123,7 +123,7 @@ return [
         |
         */
 
-        'files' => storage_path('framework/sessions'),
+        'files' => storage_path('framework\sessions'),
 
         /*
         |--------------------------------------------------------------------------
