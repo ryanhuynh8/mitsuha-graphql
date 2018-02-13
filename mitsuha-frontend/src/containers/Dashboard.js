@@ -21,6 +21,7 @@ class Dashboard extends Component {
     };
 
     selectIssue = (id) => {
+        console.log('foo');
         this.setState({ isOpen: true });
         this.props.store.issueStore.fetchComments(Number(id));
         return this.props.store.issueStore.fetchSingleIssue(Number(id));
