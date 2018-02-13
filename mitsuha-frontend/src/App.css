@@ -151,6 +151,16 @@ button .fas {
 }
 
 .SlideModal__title {
+    margin-top: 10px;
+    margin-left: -12px;
+    width: 100%;
+}
+
+.SlideModal__footer {
+    width: 100%;
+}
+
+.SlideModal__footer .row {
     width: 100%;
 }
 
@@ -202,4 +212,23 @@ button .fas {
 
 a.dotted {
     border-bottom: 1px dotted #0b45d9;
+}
+
+.kaizen-issue-body::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0px 8px 16px 0;
+    border-color: transparent white transparent transparent;
+    position: absolute;
+    top: 0;
+    left: -8px;
+}
+
+.kaizen-issue-body {
+    position: relative;
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
 }

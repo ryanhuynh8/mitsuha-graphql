@@ -9,8 +9,8 @@ export default class IssueStore {
     @observable activeIssue = {};
 
     @action
-    fetchMyIssues = async () => {
-        const response = await client.query({ query: getIssuesQuery, variables: { limit: this.limit, offset: this.currentOffset }});
+    fetchMyIssues = async (projectId) => {
+        const response = await client.query({ query: getIssuesQuery, variables: { projectId, limit: this.limit, offset: this.currentOffset }});
         const data = response.data;
         data.issues.forEach(item => {
             this.currentIssues.push(item);

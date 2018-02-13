@@ -12,11 +12,12 @@ class Dashboard extends Component {
         this.state = { isOpen: true };
     }
     async componentWillMount() {
-        this.props.store.issueStore.fetchMyIssues();
+        this.props.store.issueStore.fetchMyIssues(1);
     }
 
     loadMoreIssue = async () => {
-        return this.props.store.issueStore.fetchMyIssues();
+        return this.props.store.issueStore.fetchMyIssues(1);
+        console.log('haha');
     };
 
     selectIssue = (id) => {
@@ -26,7 +27,7 @@ class Dashboard extends Component {
 
     renderSlideTitle = (activeIssue) => {
         return (<div className="row">
-            <div className="col-md-4"><h3>{activeIssue.title}</h3></div>
+            <div className="col-md-4"><h3>Issue detail</h3></div>
             <div className="col-md-5 offset-md-3">
                 <button className="pt-button pt-minimal"><i className="fas fa-pencil-alt" />Edit</button>
                 <button className="pt-button pt-minimal"><i className="fas fa-email" />Email</button>
@@ -188,14 +189,10 @@ class Dashboard extends Component {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div>abcsdasdasdasdsadasdasd
                     <Slider
                         title={this.renderSlideTitle(activeIssue)}
-                        footer={
-                            <div style={{padding: '15px'}}>
-                                <a href='#' onClick={() => this.setState({isOpen: false}) }>Close Slider</a>
-                            </div>
-                        }
+                        footer={this.renderSlideTitle(activeIssue)}
                         isOpen={this.state.isOpen}
                         onOutsideClick={() => this.setState({isOpen: false})}>
                         <MyIssue data={activeIssue} />
