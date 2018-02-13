@@ -1,5 +1,5 @@
 import {observable, autorun, action} from 'mobx';
-import {getIssuesQuery, getSingleIssue} from "../graphql/queries";
+import {getIssuesQuery, getSingleIssue, getComments} from "../graphql/queries";
 import client from '../graphql';
 
 export default class IssueStore {
@@ -23,5 +23,11 @@ export default class IssueStore {
         const response = await client.query({ query: getSingleIssue, variables: { id: id }});
         const data = response.data;
         this.activeIssue = data.issue;
-    }
+    };
+
+    @action
+    fetchComments = async (id) => {
+        const response = await client.query({query: getComments, variables: {id: id}});
+        console.log(response.data);
+    };
 }

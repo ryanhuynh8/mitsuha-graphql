@@ -4,53 +4,13 @@ import { Suggest } from "@blueprintjs/select";
 import ReactMarkdown from 'react-markdown';
 
 const UserSuggest = Suggest.ofType({});
-const content = "\n" +
-    "# Live demo\n" +
-    "\n" +
-    "Changes are automatically rendered as you type.\n" +
-    "\n" +
-    "* Implements [GitHub Flavored Markdown](https://github.github.com/gfm/)\n" +
-    "* Renders actual, \"native\" React DOM elements\n" +
-    "* Allows you to escape or skip HTML (try toggling the checkboxes above)\n" +
-    "* If you escape or skip the HTML, no `dangerouslySetInnerHTML` is used! Yay!\n" +
-    "\n" +
-    "## HTML block below\n" +
-    "\n" +
-    "<blockquote>\n" +
-    "  This blockquote will change based on the HTML settings above.\n" +
-    "</blockquote>\n" +
-    "\n" +
-    "## How about some code?\n" +
-    "```js\n" +
-    "var React = require('react');\n" +
-    "var Markdown = require('react-markdown');\n" +
-    "\n" +
-    "React.render(\n" +
-    "  <Markdown source=\"# Your markdown here\" />,\n" +
-    "  document.getElementById('content')\n" +
-    ");\n" +
-    "```\n" +
-    "\n" +
-    "Pretty neat, eh?\n" +
-    "\n" +
-    "## Tables?\n" +
-    "\n" +
-    "| Feature | Support |\n" +
-    "| ------ | ----------- |\n" +
-    "| tables | ✔ |\n" +
-    "| alignment | ✔ |\n" +
-    "| wewt | ✔ |\n" +
-    "\n" +
-    "## More info?\n" +
-    "\n" +
-    "Read usage information and more on [GitHub](//github.com/rexxars/react-markdown)\n" +
-    "\n" +
-    "---------------\n" +
-    "\n" +
-    "A component by [VaffelNinja](http://vaffel.ninja) / Espen Hovlandsdal\n";
 
 @observer
 class MyIssue extends Component {
+    componentDidMount() {
+
+    }
+
     render() {
         const { data } = this.props;
         console.log();
@@ -117,6 +77,12 @@ class MyIssue extends Component {
 
                         <div className="row kaizen-issue-body pt-3">
                             <ReactMarkdown source={data.description} />
+                        </div>
+
+                        <div className="row py-1 pt-3"><span
+                            className="kaizen-issue-bold-label">Ryan Huynh on 11/1/2011</span></div>
+                        <div className="row kaizen-issue-body pt-3">
+                            I think this is funny as fuck
                         </div>
                     </div>
 
