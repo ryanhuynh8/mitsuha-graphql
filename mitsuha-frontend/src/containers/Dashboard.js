@@ -17,7 +17,6 @@ class Dashboard extends Component {
 
     loadMoreIssue = async () => {
         return this.props.store.issueStore.fetchMyIssues(1);
-        console.log('haha');
     };
 
     selectIssue = (id) => {
@@ -40,7 +39,7 @@ class Dashboard extends Component {
     };
 
     render() {
-        const { currentIssues, activeIssue } = this.props.store.issueStore;
+        const {currentIssues, activeIssue, activeComments} = this.props.store.issueStore;
         return (
             <div className="wrapper">
                 <nav id="sidebar">
@@ -197,7 +196,7 @@ class Dashboard extends Component {
                         footer={this.renderSlideTitle(activeIssue)}
                         isOpen={this.state.isOpen}
                         onOutsideClick={() => this.setState({isOpen: false})}>
-                        <MyIssue data={activeIssue} />
+                        <MyIssue data={activeIssue} comments={activeComments}/>
                     </Slider>
                 </div>
             </div>);

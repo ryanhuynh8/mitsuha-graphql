@@ -12,8 +12,8 @@ class MyIssue extends Component {
     }
 
     render() {
-        const { data } = this.props;
-        console.log();
+        const {data, comments} = this.props;
+
         return (
             <div className="kaizen-issue py-2">
                 <div className="row">
@@ -79,17 +79,35 @@ class MyIssue extends Component {
                             <ReactMarkdown source={data.description} />
                         </div>
 
-                        <div className="row py-1 pt-3"><span
-                            className="kaizen-issue-bold-label">Ryan Huynh on 11/1/2011</span></div>
-                        <div className="row kaizen-issue-body pt-3">
-                            I think this is funny as fuck
+                        {comments.length === 0 &&
+                        <div>
+                            <div className="row py-1 pt-3"><span
+                                className="kaizen-issue-bold-label">Ryan Huynh on 11/1/2011</span></div>
+                            <div className="row kaizen-issue-body pt-3">
+                                Loading comments...
+                            </div>
                         </div>
+                        }
+
+                        {comments.length > 0 && this.renderComments(comments)}
                     </div>
 
 
                 </div>
             </div>
         )
+    }
+
+    renderComments(comments) {
+        return comments.map(comment => (
+            <div key={comment.id}>
+                <div className="row py-1 pt-3"><span
+                    className="kaizen-issue-bold-label">Ryan Huynh on {comment.createdAt}</span></div>
+                <div className="row kaizen-issue-body pt-3">
+                    {comment.comment}
+                </div>
+            </div>
+        ))
     }
 }
 

@@ -22,8 +22,10 @@ enum MutationResult {
 scalar Date
 
 type Comment {
+    id: Int,
     comment: String,
     createdBy: String,
+    createdAt: String
 }
 
 type Issue {

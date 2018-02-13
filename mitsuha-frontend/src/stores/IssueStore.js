@@ -7,6 +7,7 @@ export default class IssueStore {
     @observable currentOffset = 0;
     @observable limit = 6;
     @observable activeIssue = {};
+    @observable activeComments = [];
 
     @action
     fetchMyIssues = async (projectId) => {
@@ -28,6 +29,6 @@ export default class IssueStore {
     @action
     fetchComments = async (id) => {
         const response = await client.query({query: getComments, variables: {id: id}});
-        console.log(response.data);
+        this.activeComments = response.data.comments;
     };
 }

@@ -29,8 +29,10 @@ export const getSingleIssue = gql`
 export const getComments = gql`
     query comments($id: Int) {
         comments(id: $id) {
+            id,
             comment,
-            createdBy
+            createdBy,
+            createdAt
         }
     }
 

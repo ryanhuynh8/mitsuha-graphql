@@ -21,8 +21,10 @@ class CommentsResolver implements Resolver
         $result = array_map(function ($comment) {
             return
                 [
+                    'id' => $comment['id'],
                     'createdBy' => $comment['user_id'],
-                    'comment' => $comment['comment']
+                    'comment' => $comment['comment'],
+                    'createdAt' => $comment['created_at']
                 ];
         }, $result);
         return $result;
