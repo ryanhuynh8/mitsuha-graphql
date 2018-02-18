@@ -64,17 +64,11 @@ class CommentsMutator implements Mutator
 class GraphQLController extends Controller {
     public function __construct()
     {
-        $this->middleware('auth:api');
+//        $this->middleware('auth:api');
     }
 
     public function generate() {
-//        for ($i = 1; $i <= 100; $i++) {
-//            $json = json_decode(file_get_contents('http://www.randomtext.me/api/gibberish/p-6/20-35'), true);
-//            $issue = new Issue();
-//            $issue->description = $json['text_out'];
-//            $issue->title = 'Foobar '.$i;
-//            $issue->save();
-//        }
+        echo phpinfo();die;
         echo 'Success';
     }
 
@@ -100,6 +94,10 @@ class GraphQLController extends Controller {
                 },
                 'comments' => function($root, $args, $context) {
                     $resolver = new App\GraphQL\CommentsResolver();
+                    return $resolver->resolve($root, $args, $context);
+                },
+                'users' => function($root, $args, $context) {
+                    $resolver = new App\GraphQL\UsersResolver();
                     return $resolver->resolve($root, $args, $context);
                 },
                 'addComment' => function($root, $args, $context) {
