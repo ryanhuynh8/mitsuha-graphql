@@ -12,6 +12,7 @@ type Query {
 
 type Mutation {
     addComment(issueId: Int, commentText: String): MutationResult
+    updateSingleIssue(id: Int, title: String, content: String): MutationResult
 }
 
 enum MutationResult {

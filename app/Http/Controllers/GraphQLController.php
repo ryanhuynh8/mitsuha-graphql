@@ -64,7 +64,7 @@ class CommentsMutator implements Mutator
 class GraphQLController extends Controller {
     public function __construct()
     {
-//        $this->middleware('auth:api');
+        $this->middleware('auth:api');
     }
 
     public function generate() {
@@ -103,15 +103,21 @@ class GraphQLController extends Controller {
                 'addComment' => function($root, $args, $context) {
                     $mutator = new CommentsMutator();
                     return $mutator->mutate($root, $args, $context);
-                }
+                },
+                'updateSingleIssue' => function($root, $args, $context) {
+                    $mutator = new App\GraphQL\UpdateIssueMutator();
+                    return $mutator->mutate($root, $args, $context);
+                },
             ];
 
             $debug = Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE;
 
+            $context = JWTAuth::getPayload(JWTAuth::getToken())->get('sub');
+
             if (strpos($query, 'query IntrospectionQuery {') !== false) { // black magic
                 $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues, null, null);
             } else {
-                $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues);
+                $result = GraphQL::executeQuery($schema, $query, $rootValue, $context, $variableValues);
             }
 
             $output = $result->toArray($debug);
