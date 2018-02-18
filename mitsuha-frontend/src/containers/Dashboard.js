@@ -196,7 +196,7 @@ class Dashboard extends Component {
                         footer={this.renderSlideTitle(activeIssue)}
                         isOpen={this.state.isOpen}
                         onOutsideClick={() => this.setState({isOpen: false})}>
-                        <MyIssue data={activeIssue} comments={activeComments}/>
+                        <MyIssue data={activeIssue} comments={activeComments} store={this.props.store} />
                     </Slider>
                 </div>
             </div>);

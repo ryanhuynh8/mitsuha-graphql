@@ -2,17 +2,27 @@ import React, { Component } from 'react';
 import {observer} from "mobx-react/index";
 import { Suggest } from "@blueprintjs/select";
 import ReactMarkdown from 'react-markdown';
+import CKEditor from "react-ckeditor-component";
+import { Icon, Card, Button, ButtonGroup, AnchorButton } from '@blueprintjs/core';
 
 const UserSuggest = Suggest.ofType({});
 
 @observer
 class MyIssue extends Component {
+    updateIssue = () => {
+        this.props.store.issueStore.updateIssue('New title', this.state.description);
+    };
+
+    updateContent = (e) => {
+        this.setState({ description: e.editor.getData() })
+    };
+
     componentDidMount() {
 
     }
 
     render() {
-        const {data, comments} = this.props;
+        const { data, comments } = this.props;
 
         return (
             <div className="kaizen-issue py-2">
@@ -76,7 +86,16 @@ class MyIssue extends Component {
                         <div className="row"><span className="kaizen-issue-label">01/31/2018 1:48 PM</span></div>
 
                         <div className="row kaizen-issue-body pt-3">
-                            <ReactMarkdown source={data.description} />
+                            {/*<ReactMarkdown source={data.description} />*/}
+                            <CKEditor
+                                activeClass="p10"
+                                content={data.description}
+                                events={{
+                                    "change": this.updateContent
+                                }}
+                            />
+                            <br />
+                            <Button onClick={this.updateIssue}>Save</Button>
                         </div>
 
                         {comments.length === 0 &&
