@@ -10,6 +10,7 @@ namespace App\GraphQL;
 
 use App;
 use App\GraphQL\Mutator;
+use App\Guards\UserCanViewProjectGuard; //TODO: implement user can edit
 
 class UpdateIssueMutator implements Mutator
 {
@@ -20,6 +21,10 @@ class UpdateIssueMutator implements Mutator
         $content = $args['content'];
         try {
             $issue = App\Issue::where('id', $id)->first();
+
+            // guard
+            UserCanViewProjectGuard::guard($context['id'], $issue->project_id);
+
             $issue->description = $content;
             $issue->title = $title;
             $issue->save();

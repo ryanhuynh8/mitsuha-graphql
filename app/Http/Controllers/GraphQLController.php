@@ -12,6 +12,7 @@ use App\GraphQL\Mutator;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use GraphQL\Error\Debug;
+use App\Guards\UserCanViewProjectGuard;
 
 class IssueResolver implements Resolver
 {
@@ -20,6 +21,10 @@ class IssueResolver implements Resolver
         $offset = $args['offset'];
         $limit = $args['limit'];
         $projectId = $args['projectId'];
+
+        // guard
+        UserCanViewProjectGuard::guard($context['id'], $projectId);
+
         $issues = Issue::where('project_id', $projectId)->limit($limit)->skip($offset)->get();
         return $issues;
     }

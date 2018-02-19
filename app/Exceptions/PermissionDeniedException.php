@@ -5,6 +5,8 @@
  * Date: 2/13/2018
  * Time: 10:44 AM
  */
+namespace App\Exceptions;
+
 use GraphQL\Error\ClientAware;
 
 class PermissionDeniedException extends \Exception implements ClientAware
