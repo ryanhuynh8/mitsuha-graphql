@@ -37,3 +37,9 @@ export const getComments = gql`
     }
 
 `;
+
+export const updateSingleIssue = gql`
+    mutation updateIssue($id: Int, $title: String, $content: String) {
+        updateSingleIssue(id: $id, title: $title, content: $content)
+    }
+`;

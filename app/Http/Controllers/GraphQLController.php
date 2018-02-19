@@ -74,7 +74,7 @@ class GraphQLController extends Controller {
 
     public function index(Request $request) {
         try {
-            $time_start = microtime(true);
+
             $contents = file_get_contents(__DIR__.'\..\..\..\schema\schema.graphql');
             $schema = BuildSchema::build($contents);
             $rawInput = file_get_contents('php://input');
@@ -110,9 +110,11 @@ class GraphQLController extends Controller {
                 },
             ];
 
+
             $debug = Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE;
 
             $context = JWTAuth::getPayload(JWTAuth::getToken())->get('sub');
+            $time_start = microtime(true);
 
             if (strpos($query, 'query IntrospectionQuery {') !== false) { // black magic
                 $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues, null, null);
@@ -130,6 +132,7 @@ class GraphQLController extends Controller {
         }
         $time_end = microtime(true);
         $time = $time_end - $time_start;
+
         return $output;
     }
 }

@@ -1,5 +1,5 @@
 import {observable, autorun, action} from 'mobx';
-import {getIssuesQuery, getSingleIssue, getComments} from "../graphql/queries";
+import {getIssuesQuery, getSingleIssue, getComments, updateSingleIssue} from "../graphql/queries";
 import client from '../graphql';
 
 export default class IssueStore {
@@ -8,6 +8,7 @@ export default class IssueStore {
     @observable limit = 6;
     @observable activeIssue = {};
     @observable activeComments = [];
+    @observable editing = false;
 
     @action
     fetchMyIssues = async (projectId) => {
@@ -30,5 +31,16 @@ export default class IssueStore {
     fetchComments = async (id) => {
         const response = await client.query({query: getComments, variables: {id: id}});
         this.activeComments = response.data.comments;
+    };
+
+    @action
+    updateIssue = async (id, title, content) => {
+        const response = await client.mutate({ mutation: updateSingleIssue, variables: { id, title, content }});
+        return response;
+    };
+
+    @action
+    toggleEditingMode = () => {
+        this.editing = !this.editing;
     };
 }

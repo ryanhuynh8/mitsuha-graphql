@@ -9,20 +9,32 @@ const UserSuggest = Suggest.ofType({});
 
 @observer
 class MyIssue extends Component {
-    updateIssue = () => {
-        this.props.store.issueStore.updateIssue('New title', this.state.description);
+    state = { updating: false, saveButtonLabel: 'Save' };
+
+    updateIssue = async (id) => {
+        this.setState({ updating: true, saveButtonLabel: 'Saving...'});
+        const content = this.state.editor ? this.state.editor.getData() : this.props.data.description;
+        const result = await this.props.store.issueStore.updateIssue(Number(this.props.data.id), this.state.newTitle, content);
+        this.setState({ updating: false, saveButtonLabel: 'Save'});
     };
 
     updateContent = (e) => {
-        this.setState({ description: e.editor.getData() })
+        this.setState({ editor: e.editor })
     };
 
-    componentDidMount() {
+    titleChange = (e) => {
+        this.setState({ newTitle: e.target.value });
+    };
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({ newTitle: nextProps.data.title });
+        
     }
 
     render() {
         const { data, comments } = this.props;
+        const { saveButtonLabel, updating } = this.state;
+        const { editing } = this.props.store.issueStore;
 
         return (
             <div className="kaizen-issue py-2">
@@ -40,7 +52,8 @@ class MyIssue extends Component {
                     </div>
                     <div className="col-md-9">
                         <div className="row">
-                            <span><h2>{ data.title }</h2></span>
+                            { !editing && <span><h2>{ data.title }</h2></span> }
+                            { editing && <input className="pt-input pt-intent-primary kaizen-title-edit" type="text" value={this.state.newTitle} dir="auto" onChange={this.titleChange} />}
                         </div>
                         <div className="row overview-text">
                             <span>Assignee: <a href="/">Ryan Huynh</a></span>
@@ -86,8 +99,8 @@ class MyIssue extends Component {
                         <div className="row"><span className="kaizen-issue-label">01/31/2018 1:48 PM</span></div>
 
                         <div className="row kaizen-issue-body pt-3">
-                            {/*<ReactMarkdown source={data.description} />*/}
-                            <CKEditor
+
+                            { editing && <div><CKEditor
                                 activeClass="p10"
                                 content={data.description}
                                 events={{
@@ -95,7 +108,10 @@ class MyIssue extends Component {
                                 }}
                             />
                             <br />
-                            <Button onClick={this.updateIssue}>Save</Button>
+                            <Button onClick={this.updateIssue} disabled={updating}>{ saveButtonLabel }</Button>
+                            </div> }
+
+                            { !editing && <div dangerouslySetInnerHTML={{__html: data.description }} /> }
                         </div>
 
                         {comments.length === 0 &&

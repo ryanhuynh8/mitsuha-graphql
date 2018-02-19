@@ -232,3 +232,8 @@ a.dotted {
     padding: 20px;
     background-color: white;
 }
+
+.kaizen-title-edit {
+    width: 100%;
+    margin-bottom: 10px;
+}

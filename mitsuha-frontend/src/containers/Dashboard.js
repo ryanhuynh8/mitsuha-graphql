@@ -11,6 +11,7 @@ class Dashboard extends Component {
         super(props);
         this.state = { isOpen: true };
     }
+
     async componentWillMount() {
         this.props.store.issueStore.fetchMyIssues(1);
     }
@@ -20,17 +21,17 @@ class Dashboard extends Component {
     };
 
     selectIssue = (id) => {
-        console.log('foo');
         this.setState({ isOpen: true });
         this.props.store.issueStore.fetchComments(Number(id));
         return this.props.store.issueStore.fetchSingleIssue(Number(id));
     };
 
     renderSlideTitle = (activeIssue) => {
+        // this.props.store.issueStore.toggleEditingMode();
         return (<div className="row">
             <div className="col-md-4"><h3>Issue detail</h3></div>
             <div className="col-md-5 offset-md-3">
-                <button className="pt-button pt-minimal"><i className="fas fa-pencil-alt" />Edit</button>
+                <button className="pt-button pt-minimal" onClick={this.props.store.issueStore.toggleEditingMode}><i className="fas fa-pencil-alt" />Edit</button>
                 <button className="pt-button pt-minimal"><i className="fas fa-email" />Email</button>
                 <button className="pt-button pt-minimal"><i className="fas fa-users" />Assign</button>
                 <button className="pt-button pt-minimal"><i className="fas fa-check" />Resolve</button>
@@ -39,7 +40,7 @@ class Dashboard extends Component {
     };
 
     render() {
-        const {currentIssues, activeIssue, activeComments} = this.props.store.issueStore;
+        const { currentIssues, activeIssue, activeComments } = this.props.store.issueStore;
         return (
             <div className="wrapper">
                 <nav id="sidebar">
@@ -195,7 +196,8 @@ class Dashboard extends Component {
                         title={this.renderSlideTitle(activeIssue)}
                         footer={this.renderSlideTitle(activeIssue)}
                         isOpen={this.state.isOpen}
-                        onOutsideClick={() => this.setState({isOpen: false})}>
+                        onOutsideClick={() => this.setState({isOpen: false})}
+                        store={this.props.store} >
                         <MyIssue data={activeIssue} comments={activeComments} store={this.props.store} />
                     </Slider>
                 </div>
