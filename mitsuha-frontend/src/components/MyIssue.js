@@ -28,7 +28,6 @@ class MyIssue extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({ newTitle: nextProps.data.title });
-        
     }
 
     render() {
