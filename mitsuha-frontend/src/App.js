@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import {Route} from 'react-router-dom';
 import './App.css';
 import Dashboard from './containers/Dashboard';
-import {ApolloProvider} from 'react-apollo';
-import {ApolloClient} from 'apollo-client';
-import {HttpLink} from 'apollo-link-http';
-import {InMemoryCache} from 'apollo-cache-inmemory';
+import Kanban from './containers/Kanban';
+import Board from './components/Board';
 import store from './stores';
 
 
@@ -16,6 +14,7 @@ class App extends Component {
             <div className="App">
                 <Route exact path="/" render={(routeProps) => (<Dashboard {...routeProps} store={store} />)}/>
                 <Route path="/dashboard" component={Dashboard}/>
+                <Route path="/kanban" component={Kanban}/>
             </div>
         );
     }
